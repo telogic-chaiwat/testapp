@@ -36,4 +36,4 @@ jobs:
           docker build -t chaiwat/testapp:1.0.0 .
       - name: docker push
         run: |
-          docker push ghcr.io/chaiwat/testapp:1.0.0
+          docker push chaiwat/testapp:1.0.0
