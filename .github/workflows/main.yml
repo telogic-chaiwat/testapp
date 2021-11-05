@@ -25,6 +25,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Runs a set of commands using the runners shell
+      - name: docker login ghcr.io
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login ghcr.io -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: docker build nodejs
         run: |
           docker build -t chaiwat/testapp:1.0.0 .
