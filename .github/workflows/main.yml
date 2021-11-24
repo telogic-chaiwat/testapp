@@ -12,7 +12,9 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+env:
+  CONTAINER_REPOSITORY: "acrdemoazassedev001.azurecr.io"
+  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -25,15 +27,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Runs a set of commands using the runners shell
-      - name: docker login ghcr.io
-        env:
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-        run: |
-          docker login ghcr.io -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: "ACR login"
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.CONTAINER_REPOSITORY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
       - name: docker build nodejs
         run: |
-          docker build -t ghcr.io/chaiwat/testapp:1.0.0 .
+          docker build -t ${{ env.CONTAINER_REPOSITORY }}/chaiwat/testapp:1.0.0 .
       - name: docker push
         run: |
-          docker push ghcr.io/chaiwat/testapp:1.0.0
+          docker push ${{ env.CONTAINER_REPOSITORY }}/chaiwat/testapp:1.0.0
